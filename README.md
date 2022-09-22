@@ -13,6 +13,10 @@ The goal of `geocoder` is to provide geocoding service for R users.
 
 To install this package
 
+``` r
+devtools::install_github("NetZissou/geocoder")
+```
+
 ## Geocoding
 
 User could use `geocoding` function to obtain the spatial information
@@ -22,15 +26,18 @@ once.
 The data structure returned from the `geocoding` function is specified
 as follows:
 
-  - address: the address specified by the user
-  - lat: latitude
-  - lng: longitude
-  - county: county name
-  - zip\_geocode: zip code from the best-matched geocoding result
-  - status\_geocode: TRUE if a valid result is founded, otherwise FALSE
-  - importance: the accuracy score from the nominatim geocoding service
-  - service: the service used (nominatim is prioritize and US census API
-    comes second)
+  - `address`: the address specified by the user
+  - `lat`: latitude
+  - `lng`: longitude
+  - `county`: county name
+  - `zip_geocode`: zip code from the best-matched geocoding result
+  - `status_geocode`: `TRUE` if a valid result is founded, otherwise
+    `FALSE`
+  - `importance`: the accuracy score from the nominatim geocoding
+    service
+  - `service`: [nominatim](https://nominatim.osc.edu/ui/search.html) is
+    prioritize and [US census
+    API](https://geocoding.geo.census.gov/geocoder/) comes second
 
 <!-- end list -->
 
@@ -44,6 +51,18 @@ result
 #>   address   lat   lng city  county zip_geocode status_geocode importance service
 #>   <chr>   <dbl> <dbl> <chr> <chr>  <chr>       <lgl>               <dbl> <chr>  
 #> 1 Robinw…  40.0 -82.9 Whit… White… 43213       TRUE                 1.03 nomina…
+dplyr::glimpse(result)
+#> Rows: 1
+#> Columns: 9
+#> $ address        <chr> "Robinwood Avenue, Whitehall, Franklin County, Ohio, 43…
+#> $ lat            <dbl> 39.96893
+#> $ lng            <dbl> -82.8964
+#> $ city           <chr> "Whitehall"
+#> $ county         <chr> "Whitehall"
+#> $ zip_geocode    <chr> "43213"
+#> $ status_geocode <lgl> TRUE
+#> $ importance     <dbl> 1.03
+#> $ service        <chr> "nominatim"
 ```
 
 ``` r
