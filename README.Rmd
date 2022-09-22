@@ -1,0 +1,113 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  paged.print=FALSE
+)
+```
+
+# geocoder
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+The goal of `geocoder` is to provide geocoding service for R users.
+
+## Installation
+
+To install this package
+
+## Geocoding
+
+User could use `geocoding` function to obtain the spatial information from a given address. User may pass in one or multiple address all at once.
+
+The data structure returned from the `geocoding` function is specified as follows:
+
+- address: the address specified by the user
+- lat: latitude
+- lng: longitude 
+- county: county name
+- zip_geocode: zip code from the best-matched geocoding result
+- status_geocode: TRUE if a valid result is founded, otherwise FALSE
+- importance: the accuracy score from the nominatim geocoding service
+- service: the service used (nominatim is prioritize and US census API comes second)
+
+```{r  paged.print=FALSE}
+library(geocoder)
+
+address <- "Robinwood Avenue, Whitehall, Franklin County, Ohio, 43213, United States"
+result <- geocoding(address)
+result
+```
+
+```{r paged.print=FALSE}
+address_list <- 
+  c(
+     "Robinwood Avenue, Whitehall, Franklin County, Ohio, 43213, United States",
+     "Hamilton Road, East Hamilton Plaza, Whitehall, Franklin County, Ohio, 43125, United States",
+     "Target, 3955, East Broad Street, Whitehall, Franklin County, Ohio, 43213, United States",
+     "Josephus Lane, Whitehall, Franklin County, Ohio, 43227, United States",
+     "Chandler Drive, Whitehall, Franklin County, Ohio, 43213, United States",
+     "Enterprise, East Broad Street, East Broad Plaza Apartments, Whitehall, Franklin County, Ohio, 43004, United States"
+  )
+
+geocoding(address_list)
+```
+
+To specify the service to use, user could use `geocoding_nominatim` or `geocoding_census`. 
+
+```{r paged.print=FALSE}
+# Use US Census API
+geocoding_census(address = address)
+
+# Use Nominatim
+geocoding_nominatim(address = address, threshold = 0.5)
+```
+
+Note that these two functios only works for single address input. To geocode multiple addresses with specified service, wrap the function with a for-loop or use the `map` family functions.
+
+```{r paged.print=FALSE}
+purrr::map_dfr(
+  .x = address_list,
+  .f = geocoding_nominatim
+)
+```
+
+## Reverse Geocoding
+
+Sometimes only lat and lng is provided but you would like to have other spatial information such as zipcode, county, city and etc. You could use `geocoding_nominatim_reverse` to reverse geocoding. 
+
+```{r paged.print=FALSE}
+geocoding_nominatim_reverse(
+  lat = 39.96893,
+  lng = -82.8964
+)
+```
+
+## Geocoding with Spatial Shapefiles
+`geocoding_sf` is designed when you have a shapefile that contains serveral spatial regions and you wold like to know which region your data falls into. 
+
+```{r eval = FALSE}
+geocoding_sf(
+  lat = lat,
+  lng = lng,
+  sf = sf,     # spatial object
+  id = "name", # the identifier column of the sf object
+  parallel = FALSE # parallel execution
+)
+```
+
+
+
+
+
+
+
